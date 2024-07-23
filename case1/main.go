@@ -14,7 +14,7 @@ import (
 func main() {
 	newrelicApp, err := newrelic.NewApplication(
 		newrelic.ConfigAppName("local-testing-case-1"),
-		newrelic.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__1234567890"),
+		newrelic.ConfigLicense("0c1bc1be98bbd6fc2ad72b85fdc086c27cc8NRAL"),
 	)
 	if err != nil {
 		fmt.Println("Error initializing New Relic:", err)
@@ -52,10 +52,11 @@ func (a *App) handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func processRequest(ctx context.Context) {
-	select {
-	case <-time.After(2 * time.Second):
-		fmt.Println("Request processed")
-	case <-ctx.Done():
-		fmt.Println("Request canceled")
-	}
+	ctxReq, _ := context.WithCancel(ctx)
+	doSomeProcess(ctxReq)
+}
+
+func doSomeProcess(ctx context.Context) {
+	// simulate some process
+	time.Sleep(3 * time.Second)
 }
