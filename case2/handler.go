@@ -13,10 +13,12 @@ func NewApp(event *Event) *App {
 }
 
 func (a *App) Handler(w http.ResponseWriter, r *http.Request) {
-	a.publishEvent()
-	// fmt.Fprintln(w, "Event published")
+	key := r.URL.Query().Get("key")
+
+	a.event.Subscribe()
+	a.publishEvent(key)
 }
 
-func (a *App) publishEvent() {
-	a.event.Publish("New event")
+func (a *App) publishEvent(message string) {
+	a.event.Publish("New event: " + message)
 }

@@ -26,7 +26,10 @@ func main() {
 
 func makeRequest(wg *sync.WaitGroup) {
 	defer wg.Done()
-	resp, err := http.Get(fmt.Sprintf("http://localhost:8080/?key=key_%s&value=value_%s", randString(10), randString(10)))
+
+	str := randString(10)
+	fmt.Println("str", str)
+	resp, err := http.Get(fmt.Sprintf("http://localhost:8080/?key=key_%s&value=value_%s", str, str))
 	if err != nil {
 		fmt.Printf("Error making request: %v\n", err)
 		return

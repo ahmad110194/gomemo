@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"time"
 )
 
 type Subscriber struct {
@@ -19,8 +18,6 @@ func (s *Subscriber) Start() {
 			select {
 			case event := <-ch:
 				log.Println("Received event:", event)
-			default:
-				time.Sleep(100 * time.Millisecond)
 			}
 		}
 	}
