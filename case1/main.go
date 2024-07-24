@@ -14,7 +14,7 @@ import (
 func main() {
 	newrelicApp, err := newrelic.NewApplication(
 		newrelic.ConfigAppName("local-testing-case-1"),
-		newrelic.ConfigLicense("0c1bc1be98bbd6fc2ad72b85fdc086c27cc8NRAL"),
+		newrelic.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__1234567890"),
 	)
 	if err != nil {
 		fmt.Println("Error initializing New Relic:", err)

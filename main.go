@@ -18,7 +18,7 @@ func main() {
 		wg.Add(1)
 		go makeRequest(&wg)
 
-		delay := time.Duration(rand.Intn(50)) * time.Millisecond
+		delay := time.Duration(rand.Intn(100)) * time.Millisecond
 		time.Sleep(delay)
 	}
 	wg.Wait()
@@ -28,7 +28,6 @@ func makeRequest(wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	str := randString(10)
-	fmt.Println("str", str)
 	resp, err := http.Get(fmt.Sprintf("http://localhost:8080/?key=key_%s&value=value_%s", str, str))
 	if err != nil {
 		fmt.Printf("Error making request: %v\n", err)
