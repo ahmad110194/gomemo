@@ -15,7 +15,9 @@ func NewApp(event *Event) *App {
 func (a *App) Handler(w http.ResponseWriter, r *http.Request) {
 	key := r.URL.Query().Get("key")
 
-	a.event.Subscribe()
+	ch := a.event.Subscribe()
+	defer a.event.Unsubscribe(ch)
+
 	a.publishEvent(key)
 }
 

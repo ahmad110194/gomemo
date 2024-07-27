@@ -14,11 +14,13 @@ func NewSubscriber(event *Event) *Subscriber {
 
 func (s *Subscriber) Start() {
 	for {
-		for _, ch := range s.event.subscribers {
+		s.event.mu.Lock()
+		for ch := range s.event.subscribers {
 			select {
 			case event := <-ch:
 				log.Println("Received event:", event)
 			}
 		}
+		s.event.mu.Unlock()
 	}
 }

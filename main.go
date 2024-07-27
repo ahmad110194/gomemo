@@ -18,7 +18,7 @@ func main() {
 		wg.Add(1)
 		go makeRequest(&wg)
 
-		delay := time.Duration(rand.Intn(100)) * time.Millisecond
+		delay := time.Duration(rand.Intn(10)) * time.Millisecond
 		time.Sleep(delay)
 	}
 	wg.Wait()
