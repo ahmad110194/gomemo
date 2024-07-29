@@ -26,7 +26,6 @@ func (eb *Event) Unsubscribe(ch chan string) {
 	defer eb.mu.Unlock()
 	if _, ok := eb.subscribers[ch]; ok {
 		delete(eb.subscribers, ch)
-		close(ch)
 	}
 }
 
