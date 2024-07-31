@@ -15,10 +15,13 @@ func NewApp(event *Event) *App {
 func (a *App) Handler(w http.ResponseWriter, r *http.Request) {
 	key := r.URL.Query().Get("key")
 
-	ch := a.event.Subscribe()
-	defer a.event.Unsubscribe(ch)
+	sub := a.event.Subscribe()
+
+	go sub.Start()
 
 	a.publishEvent(key)
+
+	a.event.Unsubscribe(sub)
 }
 
 func (a *App) publishEvent(message string) {

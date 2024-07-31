@@ -1,26 +1,32 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"time"
 )
 
 type Subscriber struct {
-	event *Event
+	id       int
+	channel  chan string
+	stopChan chan struct{}
 }
 
-func NewSubscriber(event *Event) *Subscriber {
-	return &Subscriber{event: event}
+func NewSubscriber(id int) *Subscriber {
+	return &Subscriber{
+		id:       id,
+		channel:  make(chan string, 10),
+		stopChan: make(chan struct{}),
+	}
 }
 
 func (s *Subscriber) Start() {
 	for {
-		s.event.mu.Lock()
-		for ch := range s.event.subscribers {
-			select {
-			case event := <-ch:
-				log.Println("Received event:", event)
-			}
+		select {
+		case message := <-s.channel:
+			time.Sleep(100 * time.Millisecond)
+			fmt.Printf("Received message: %s, subid: %d\n", message, s.id)
+		case <-s.stopChan:
+			return
 		}
-		s.event.mu.Unlock()
 	}
 }

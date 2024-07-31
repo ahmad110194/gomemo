@@ -1,38 +1,45 @@
 package main
 
-import "sync"
+import (
+	"sync"
+)
 
 type Event struct {
-	subscribers map[chan string]struct{}
+	subscribers map[int]*Subscriber
 	mu          sync.Mutex
+	nextID      int
 }
 
 func NewEvent() *Event {
 	return &Event{
-		subscribers: make(map[chan string]struct{}),
+		subscribers: make(map[int]*Subscriber),
+		nextID:      0,
 	}
 }
 
-func (eb *Event) Subscribe() chan string {
-	ch := make(chan string)
-	eb.mu.Lock()
-	eb.subscribers[ch] = struct{}{}
-	eb.mu.Unlock()
-	return ch
+func (e *Event) Subscribe() *Subscriber {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+
+	sub := NewSubscriber(e.nextID)
+	e.subscribers[e.nextID] = sub
+	e.nextID++
+
+	return sub
 }
 
-func (eb *Event) Unsubscribe(ch chan string) {
-	eb.mu.Lock()
-	defer eb.mu.Unlock()
-	if _, ok := eb.subscribers[ch]; ok {
-		delete(eb.subscribers, ch)
-	}
+func (e *Event) Unsubscribe(sub *Subscriber) {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+
+	delete(e.subscribers, sub.id)
 }
 
-func (eb *Event) Publish(event string) {
-	eb.mu.Lock()
-	defer eb.mu.Unlock()
-	for sub := range eb.subscribers {
-		sub <- event
+func (e *Event) Publish(message string) {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+
+	for _, sub := range e.subscribers {
+		sub.channel <- message
 	}
 }

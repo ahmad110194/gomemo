@@ -9,10 +9,7 @@ import (
 
 func main() {
 	event := NewEvent()
-	subscriber := NewSubscriber(event)
 	app := NewApp(event)
-
-	go subscriber.Start()
 
 	go func() {
 		log.Println(http.ListenAndServe("localhost:6060", nil))
