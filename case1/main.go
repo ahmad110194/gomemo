@@ -58,5 +58,12 @@ func processRequest(ctx context.Context) {
 
 func doSomeProcess(ctx context.Context) {
 	// simulate some process
-	time.Sleep(3 * time.Second)
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		default:
+			time.Sleep(3 * time.Second) // simulate processing
+		}
+	}
 }
